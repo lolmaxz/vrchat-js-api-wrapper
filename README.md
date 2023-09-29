@@ -14,7 +14,7 @@ This project let's you easily use vrchat-api-js project.
 
 ## Installation
 
-Instructions on how to install and set up your project. Include any dependencies that need to be installed as well.
+Here is how you can install and start using this library:
 
 ### Step 1: Clone the repository
 
@@ -30,9 +30,7 @@ npm install
 
 ## Usage
 
-There is an example code to get started bellow followed by explainations
-
-Certainly! Here's an example of how you can present the code in your README file:
+There is an example code to get started bellow, followed by explainations.
 
 ```javascript
 // Import the VRChatWrapper module
@@ -45,7 +43,7 @@ const vrchat_account = new VRChatWrapper(
 );
 
 // With our new instance we now authenticate
-// if it fails, you'll be guided through a menu to correctly login
+// If it fails, you'll be guided through a menu to correctly login
 vrchat_account.authenticate().then(async () => {
     // Put any instructions here you want to do after authentification is done successfully
 });
@@ -55,9 +53,9 @@ We starts by importing the `VRChatWrapper` module and then we create a new insta
 
 Next, we call the `authenticate()` method on the `vrchat_account` instance to authenticate with the VRChat API. Inside the `then()` callback, we can call multiple different things. !(WIP)!
 
-1. Retrieving information about a specific world using `getWorldById("wrld_id")` and logging the result to the console. (Works)
-2. Getting the user's friends list using `getFriendsList()` and logging the result to the console. (TODO)
-3. Sending a friend request to a specific user using `sendFriendRequest(usr_id)` and logging the result to the console. (TODO)
+1. Retrieving information about a specific world using `getWorldById("wrld_id")`. (Works)
+2. Getting the user's friends list using `getFriendsList()`. (TODO)
+3. Sending a friend request to a specific user using `sendFriendRequest(usr_id)`. (TODO)
 
 Feel free to modify the code and add any other instructions or API calls you need after these examples in the VRChatWrapper. If authentication fails, you'll be prompted to fix authentication.
 
@@ -65,8 +63,13 @@ Remember to replace `'wrld_id'` with the actual ID of the world you want to retr
 
 ## Contributing
 
-Guidelines for contributing to your project. Include information on how others can contribute, submit bug reports, or suggest enhancements.
+You can contribute to this project, but I am still a novice when it comes to learning how github works. Thank you for your help and patience!
 
 ## License
 
-Include any license information for your project.
+  GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
