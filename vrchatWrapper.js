@@ -3,6 +3,7 @@ const vrchat = require("vrchat");
 const readline = require("readline");
 const fs = require("fs");
 const { Cookie } = require("tough-cookie");
+const readlineSync = require('readline-sync');
 require("dotenv").config();
 const { blue, bold, underline, green, yellow, red, reset, gray } = require("colorette")
 
@@ -446,7 +447,10 @@ class VRChatWrapper {
   // This is called when the user has selected to manually enter credentials into the console
   requestCredentials() {
     this.rl.question("Enter username: ", (username) => {
-      this.rl.question("Enter password: ", (password) => {
+        const password = readlineSync.question('Enter password: ', {
+            hideEchoBack: true // The typed characters won't be visible
+          });
+      
         // Call the appropriate API method to authenticate with the provided credentials
         // Replace the next line with the actual method call and parameters
         this.manualCredentials = true;
@@ -458,7 +462,7 @@ class VRChatWrapper {
         );
         this.authApi = new vrchat.AuthenticationApi(this.configuration);
         this.authenticate();
-      });
+      
     });
   }
 

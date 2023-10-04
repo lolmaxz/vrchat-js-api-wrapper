@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Custom gitIgnore
+./cookies.json
+cookies.json
+cookies*.json
+cookies_*.json
+./cookies*.json
+./cookies_*.json
