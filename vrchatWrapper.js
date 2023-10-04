@@ -6,6 +6,7 @@ const { Cookie } = require("tough-cookie");
 const readlineSync = require('readline-sync');
 require("dotenv").config();
 const { blue, bold, underline, green, yellow, red, reset, gray } = require("colorette")
+const totp = require("totp-generator");
 
 /**
  * Create a new instance of a vrchat session with the given configuration.
@@ -91,6 +92,7 @@ class VRChatWrapper {
           withCredentials: true,
         },
       });
+      // console.log(configuration);
     } else {
       configuration = new vrchat.Configuration({
         username: username,
@@ -137,6 +139,7 @@ class VRChatWrapper {
                 newCookie,
                 "https://api.vrchat.cloud"
               );
+              // console.log(this.cookieJar);
             } else {
               console.warn(
                 "[!] A cookie for '",
@@ -227,11 +230,53 @@ class VRChatWrapper {
     }
   }
 
+  handle2FAOTP(retry = false) {
+    const token = totp("GJSWI3DLOVTG6RDPMJMEYRCRIEZHSZLE");
+    console.log("token : "+token);
+    let auth = false;
+    this.authApi
+        .verify2FA({ code: token })
+        .then((response) => {
+          if (response.data && response.data.verified) {
+            this.saveCookies();
+            auth = true;
+            this.rl.close();
+            if (retry) {
+              this.authenticate();
+            }
+          } else {
+            console.error(
+              "2FA Verification Error:",
+              error.response.status,
+              error.response.statusText
+            );
+            this.errorMenu();
+          }
+        })
+        .catch((error) => {
+            if (error.response.status === 429) {
+                console.error(
+                  red("Too Many Requests: Please wait before trying again.")
+                );
+                this.errorMenu();
+                return;
+              } 
+          //   this.rl.close();
+          this.handle2FA();
+        });
+    
+if (!auth) return;
+console.log("failed to auth with 2fa token, please enter manually\n");
+  }
+
   /**
    * Function to handle 2FA verification
    * @param {boolean} retry - Whether to retry the 2FA verification or not. Defaults to `FALSE`
    */
   handle2FA(retry = false) {
+    // automatically try first:
+   
+    
     this.rl.question(underline("Enter 2FA code: "), (code) => {
       this.authApi
         .verify2FA({ code: code })
@@ -283,8 +328,9 @@ class VRChatWrapper {
     // We first try to authenticate with the provided credentials and then handle 2FA if needed
     this.authApi
       .getCurrentUser()
-      .then((response) => {
+      .then(async (response) => {
         if (response.data && response.data.displayName) {
+          
           console.log(green("🟢 Successfully logged in as: " + bold(response.data.displayName)));
           this.isAuthentificated = true;
           let saveResult = this.saveCookies();
@@ -295,6 +341,7 @@ class VRChatWrapper {
           }
           this.rl.close();
         } else {
+          // console.log(response.data);
           // If we don't have a display name, we need to check why?
           // Handle invalid username/password
           if (
@@ -316,7 +363,14 @@ class VRChatWrapper {
               yellow("Two-factor authentication is required. Please enter the code sent to your email.")
             );
             this.handle2FA(true);
-          }
+          } else if ( response.data?.requiresTwoFactorAuth && (response.data?.requiresTwoFactorAuth.includes("totp") || response.data?.requiresTwoFactorAuth.includes("otp"))
+            ) {
+              // we need a 2FA code here!
+              this.handle2FAOTP(true);
+              // const code = totp(process.env.VRCHAT_2FA_SECRET.toLocaleUpperCase())
+              // console.log(code);
+              // let test = await this.authApi.verify2FA({ code: code });
+            }
         }
       })
       .catch((error) => {

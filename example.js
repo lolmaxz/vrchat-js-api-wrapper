@@ -5,6 +5,8 @@ require('dotenv').config();
 
 // Create a new instance of the wrapper
 const vrchat_account = new VRChatWrapper(
+    process.env.VRCHAT_USERNAME,
+    process.env.VRCHAT_PASSWORD
 );
 
 vrchat_account.authenticate().then(async () => {

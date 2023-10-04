@@ -132,3 +132,7 @@ dist
 # Custom gitIgnore
 ./cookies.json
 cookies.json
+cookies*.json
+cookies_*.json
+./cookies*.json
+./cookies_*.json
